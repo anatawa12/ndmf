@@ -121,6 +121,19 @@ You can simply create objects and assign them to the avatar hierarchy.
 [`AssetDatabase.ImportAsset`]: https://docs.unity3d.com/ja/2021.2/ScriptReference/AssetDatabase.ImportAsset.html
 [`BuildContext.AssetSaver`]: xref:nadena.dev.ndmf.BuildContext.AssetSaver
 
+### Don't assume any assets are persisted
+
+NDMF automatically saves generated assets at the end of the build.
+As a result, your plugin may need to process avatars that reference non-persisted assets.
+
+Some Unity APIs, such as [`AnimatorStateMachine.AddState`], behave unexpectedly when used with non-persisted assets.
+Do not rely on such APIs in your plugin.
+
+For animator-related operations, use array-based accessors or the more advanced and optimized [NDMF Animator API] instead.
+
+[`AnimatorStateMachine.AddState`]: https://docs.unity3d.com/ja/2020.1/ScriptReference/Animations.AnimatorStateMachine.AddState.html
+[NDMF Animator API]: /api/nadena.dev.ndmf.animator.html
+
 ### Register cloned objects with ObjectRegistry
 
 If your plugin clones object to modify them, you should register relationships between original objects and cloned objects
