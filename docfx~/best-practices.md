@@ -98,22 +98,22 @@ This helps avoid conflicts with other plugins that may use the same state type f
 
 ### Don't call AssetDatabase.SaveAssets or related methods during builds
 
-It's not necessary for NDMF plugins to save generated assets immediately, so plugins may receive an avatar with references to non-persisted assets.
+NDMF automatically saves generated assets at the end of the build, so it's not necessary for NDMF plugins to save generated assets immediately.
 
-In some cases, persisted temporary assets may themselves reference non-persisted assets at the time a plugin runs.
+Your plugin may need to process an avatar that references non-persisted assets.
+In some cases, already-persisted temporary assets may reference non-persisted assets when a plugin runs.
 
-Therefore, do not call [`AssetDatabase.SaveAssets`], [`AssetDatabase.Refresh`], or any other method that triggers asset saving.
-Doing so can corrupt temporary assets being created during the build process and cause unpredictable failures.
+Therefore, do not call [`AssetDatabase.SaveAssets`], [`AssetDatabase.Refresh`], or any other method that triggers asset saving. Doing so can corrupt already-persisted temporary assets and cause unpredictable failures.
 
-To save assets created during a build, use [`BuildContext.AssetSaver`] instead:
+If you need to explicitly persist an asset created during a build, use [`BuildContext.AssetSaver`] instead:
 
 ```csharp
 ctx.AssetSaver.SaveAsset(generatedObject);
 ```
 
-If you need to reload specific assets, use [`AssetDatabase.ImportAsset`] instead of [`AssetDatabase.Refresh`].
+If you need to reimport a specific asset, use [`AssetDatabase.ImportAsset`] instead of [`AssetDatabase.Refresh`].
 
-NDMF automatically saves all assets referenced by the avatar at the end of the build process, so in many cases you do not need to call `SaveAsset` at all.
+NDMF automatically saves all assets referenced by the avatar at the end of the build process, so in most cases you do not need to call `SaveAsset`. 
 You can simply create objects and assign them to the avatar hierarchy.
 
 [`AssetDatabase.SaveAssets`]: https://docs.unity3d.com/2022.3/Documentation/ScriptReference/AssetDatabase.SaveAssets.html
